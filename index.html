@@ -147,7 +147,7 @@
         gl.useProgram(program);
 
         program.uColor = gl.getUniformLocation(program, "uColor");
-        gl.uniform4fv(program.uColor, [0.3216, 0.6157, 0.7176, 1.0]);
+        gl.uniform4fv(program.uColor, [0.6, 1, 1, 1.0]);
 
         program.aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
         gl.enableVertexAttribArray(program.aVertexPosition);
@@ -166,9 +166,9 @@
         for(var x = 0; x < size; x++)
           for(var y = 0; y < size; y++)
             if(data[y*size + x] === 0)
-              drawPointOff(x*dist+offset, y*dist+offset, 10);
+              drawPointOff(x*dist+offset, y*dist+offset, 5);
             else
-              drawPointOn(x*dist+offset, y*dist+offset, 10);
+              drawPointOn(x*dist+offset, y*dist+offset, 5);
       }
 
       function generateData(size, edge){
