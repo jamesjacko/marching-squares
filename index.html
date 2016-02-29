@@ -5,6 +5,7 @@
     <title>Marching Squares Algorithm</title>
     <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
     <link rel="stylesheet" href="style.css" type="text/css">
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
     <script src="semantic/dist/semantic.min.js"></script>
     <script id="vertex" type="x-shader">
       attribute vec2 aVertexPosition;
@@ -72,9 +73,9 @@
         if (!gl.getProgramParameter(program, gl.LINK_STATUS))
           console.log(gl.getProgramInfoLog(program));
 
-        animate();
+        animate(canvas.height * devicePixelRatio);
       }
-      function drawPointOff(x,y,size){
+      function drawPointOff(x,y,size, one){
         var point = {
           x: (x / canvas.width * devicePixelRatio) - 1,
           y: (y / canvas.height * devicePixelRatio) - 1,
@@ -106,7 +107,10 @@
         gl.useProgram(program);
 
         program.uColor = gl.getUniformLocation(program, "uColor");
-        gl.uniform4fv(program.uColor, [0.3216, 0.6157, 0.7176, 1.0]);
+        if(one)
+          gl.uniform4fv(program.uColor, [1, 0, 0, 1.0]);
+        else
+          gl.uniform4fv(program.uColor, [0.3216, 0.6157, 0.7176, 1.0]);
 
         program.aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
         gl.enableVertexAttribArray(program.aVertexPosition);
@@ -155,20 +159,46 @@
 
         gl.drawArrays(gl.TRIANGLES, 0, numItems);
       }
-      function animate(){
+      function animate(height){
         gl.clearColor(0.13, 0.15, 0.17, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
-        var dist = 50;
-        var offset = 20;
 
-        var size = 20;
+        var dist = 30;
+        var offset = 40;
+        var size = 30;
+        // ********************
+        // GET RID OF THIS
+        // HARDCODED RUBBISH!!!
+        height = 1000;
+        // ASAP
+        // ********************
         var data = generateData(size, 5);
-        for(var x = 0; x < size; x++)
-          for(var y = 0; y < size; y++)
+
+        var $dataContainer = $('#data_container');
+        for(var y = 0; y < size; y++){
+          for(var x = 0; x < size; x++){
+            $dataContainer.append(data[y*size + x]);
+          }
+          $dataContainer.append("<br>");
+        }
+
+
+
+
+        for(var x = 0; x < size; x++){
+          for(var y = 0; y < size; y++){
+
+
+            /*
+              We minus the y value off the height to reverse the axes
+              putting it inline with css coordinate system.
+            */
             if(data[y*size + x] === 0)
-              drawPointOff(x*dist+offset, y*dist+offset, 5);
+              drawPointOff(x*dist+offset, height-(y*dist+offset), 5);
             else
-              drawPointOn(x*dist+offset, y*dist+offset, 5);
+              drawPointOn(x*dist+offset, height-(y*dist+offset), 5);
+          }
+        }
       }
 
       function generateData(size, edge){
@@ -227,7 +257,44 @@
     </script>
   </head>
   <body onload="init()">
+    <div class="ui fixed inverted menu">
+      <div class="ui container">
+        <a href="#" class="header item">
+          Marching Squares
+        </a>
+      </div>
+    </div>
+    <div class="ui main container">
+      <h1 class="ui header">Marching Squares</h1>
+      <div class="ui small steps center aligned">
+        <div class="step">
+          <i class="file text icon"></i>
+          <div class="content">
+            <div class="title">Load Data</div>
+            <div class="description">Random data to visualise. </div>
+          </div>
+        </div>
+        <div class="disabled step">
+          <i class="cube icon"></i>
+          <div class="content">
+            <div class="title">Binarise</div>
+            <div class="description">Get index of each cell.</div>
+          </div>
+        </div>
+        <div class="disabled step">
+          <i class="flag icon"></i>
+          <div class="content">
+            <div class="title">Place Contour</div>
+            <div class="description">Assign contours from lookup.</div>
+          </div>
+        </div>
+      </div>
+      <div class="positioner">
+        <div id="data_container">
 
-     <canvas id="mycanvas" width="800" height="500"></canvas>
+        </div>
+        <canvas id="mycanvas" width="800" height="500"></canvas>
+      </div>
+    </div>
   </body>
 </html>
