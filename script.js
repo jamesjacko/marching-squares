@@ -19,7 +19,7 @@ function init(){
 
 
   gl.viewport(0, 0, canvas.width, canvas.height);
-  gl.clearColor(0.13, 0.15, 0.17, 1);
+  gl.clearColor(0.08, 0.09, 0.09, 1);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
   // compile shaders into DOM
@@ -67,7 +67,7 @@ function init(){
     }
     showData(canvas,30,data,$('#data_container'),devicePixelRatio,function(){
       $('#step2').html("Now we have the binary data for our contour we need to look at each cube formed by the data. Click the button bellow to see the cubes. <br><button id='vis' onclick='vis();'>Continue</button>");
-      gl.clearColor(0.13, 0.15, 0.17, 1);
+      gl.clearColor(0.08, 0.09, 0.09, 1);
       gl.clear(gl.COLOR_BUFFER_BIT);
     });
   });
@@ -139,7 +139,7 @@ function drawPoint(point,size, on){
     else if(on === 3)
       gl.uniform4fv(program.uColor, [1, 0.68, 0.68, 1.0]);
     else
-      gl.uniform4fv(program.uColor, [0.6, 1, 1, 1.0]);
+      gl.uniform4fv(program.uColor, [1, 1, 1, 1.0]);
   else
       gl.uniform4fv(program.uColor, [0.4, 0.4, 0.4, 1.0]);
 
@@ -165,7 +165,7 @@ function animate(){
     step = steps.SHOWDATA;
   } else if (step === steps.SHOWDATA){
     showData(canvas,size,data,$('#data_container'),devicePixelRatio, function(){$('#step2').show();
-      gl.clearColor(0.13, 0.15, 0.17, 1);
+      gl.clearColor(0.08, 0.09, 0.09, 1);
       gl.clear(gl.COLOR_BUFFER_BIT);
       thresholdSelector(-1, 610, 150, 30);
     });
@@ -196,7 +196,7 @@ function animate(){
           curPoint.x + 10 * devicePixelRatio < tsPoints[i].x2 &&
           curPoint.y - 10 * 2 * devicePixelRatio - 5 > tsPoints[i].y &&
           curPoint.y - 10 * 2 * devicePixelRatio - 5 < tsPoints[i].y2){
-            gl.clearColor(0.13, 0.15, 0.17, 1);
+            gl.clearColor(0.08, 0.09, 0.09, 1);
             gl.clear(gl.COLOR_BUFFER_BIT);
             thresholdSelector(i, 610, 150, 30);
 
@@ -264,7 +264,7 @@ function animate(){
     }
 
   });
-  canvas.addEventListener('mousemove', function(e){
+  canvas.addEventListener('click', function(e){
     if(e.offsetX < 500){
       canvas.style.cursor = "pointer";
       if(step === steps.CLICK){
@@ -328,27 +328,27 @@ function animate(){
         if(devicePixelRatio == 1){
           if(curPoint.y > 356 && curPoint.y < 368){
             if(curPoint.x > 594 && curPoint.x < 606){
-              gl.clearColor(0.13, 0.15, 0.17, 1);
+              gl.clearColor(0.08, 0.09, 0.09, 1);
               gl.clear(gl.COLOR_BUFFER_BIT);
               thresh = 0;
               thresholdSelector(thresh, 610, 150, 30);
             }
             if(curPoint.x > 624 && curPoint.x < 636){
-              gl.clearColor(0.13, 0.15, 0.17, 1);
+              gl.clearColor(0.08, 0.09, 0.09, 1);
               gl.clear(gl.COLOR_BUFFER_BIT);
               thresh = 1;
               thresholdSelector(thresh, 610, 150, 30);
             }
 
             if(curPoint.x > 654 && curPoint.x < 666){
-              gl.clearColor(0.13, 0.15, 0.17, 1);
+              gl.clearColor(0.08, 0.09, 0.09, 1);
               gl.clear(gl.COLOR_BUFFER_BIT);
               thresh = 2;
               thresholdSelector(thresh, 610, 150, 30);
             }
 
             if(curPoint.x > 684 && curPoint.x < 696){
-              gl.clearColor(0.13, 0.15, 0.17, 1);
+              gl.clearColor(0.08, 0.09, 0.09, 1);
               gl.clear(gl.COLOR_BUFFER_BIT);
               thresh = 3;
               thresholdSelector(thresh, 610, 150, 30);
@@ -357,7 +357,7 @@ function animate(){
             canvas.style.cursor = "pointer";
             $('.num').css({"font-weight":"normal","color":"inherit"});
             for (var n = thresh; n < tsPoints.length; n++) {
-              $('.n'+ (n + 1)).css({"font-weight":"bold","color":"#99FF99"});
+              $('.n'+ (n + 1)).css({"font-weight":"bold","color":"rgb(255,255,255)"});
             }
           }
         }
@@ -369,9 +369,9 @@ function animate(){
             canvas.style.cursor = "pointer";
             $('.num').css({"font-weight":"normal","color":"inherit"});
             for (var n = i; n < tsPoints.length; n++) {
-              $('.n'+ (n + 1)).css({"font-weight":"bold","color":"#99FF99"});
+              $('.n'+ (n + 1)).css({"font-weight":"bold","color":"rgb(255,255,255)"});
             }
-            gl.clearColor(0.13, 0.15, 0.17, 1);
+            gl.clearColor(0.08, 0.09, 0.09, 1);
             gl.clear(gl.COLOR_BUFFER_BIT);
             thresh = i;
             thresholdSelector(i, 610, 150, 30);
@@ -425,7 +425,7 @@ function drawMainCube(canvas, data, x, y){
 }
 
 function drawBits(canvas, size, data, dist, border){
-  gl.clearColor(0.13, 0.15, 0.17, 1);
+  gl.clearColor(0.08, 0.09, 0.09, 1);
   gl.clear(gl.COLOR_BUFFER_BIT);
   drawGrid(canvas, size, border);
   showDots(canvas, size, data, dist, border);
@@ -437,7 +437,7 @@ function drawBits(canvas, size, data, dist, border){
     x: 0.25,
     y: 1
   };
-  drawLine(start, end,	[0.17, 0.7, 0.90, 1]);
+  drawLine(start, end,	[0.49, 0.7, 0.30, 1]);
   if(step > 3)
     drawLookUpCubes(canvas);
 }

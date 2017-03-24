@@ -11,7 +11,7 @@ body{
     border-bottom: 30px solid green;
 }
 canvas{
-  border:1px solid #4696B2;
+  border:1px solid rgb(100%, 62%, 0%);
   outline:1px solid #21252B;
   cursor: pointer;
 }
@@ -21,7 +21,7 @@ canvas{
 
 #data_container, #instructions{
   font-family: "Courier New";
-  color:#58BFE3;
+  color:rgb(100%, 62%, 0%);
   font-size: 12px;
   letter-spacing: 9.3px;
   line-height: 16px;
@@ -32,7 +32,7 @@ canvas{
 
 #step1, #step2{
   font-family: "Courier New";
-  color:#58BFE3;
+  color:rgb(100%, 62%, 0%);
   font-size: 16px;
   line-height: 24px;
   position: absolute;
@@ -133,7 +133,7 @@ canvas{
   visibility: hidden;
 }
 button{
-  background: #58BFE3;
+  background: rgb(100%, 62%, 0%);
   border:0;
   color:#21252B;
 }
