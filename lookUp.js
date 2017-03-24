@@ -63,58 +63,58 @@ function drawConnections(point1, point2, point3, point4, dec){
     case 14:
       drawLine({x:point3.x - (point3.x - point4.x)/2, y:point3.y},
                {x:point4.x, y:point4.y + (point1.y - point4.y )/2},
-               [1,1,1,1]);
+               [0,0,0,1]);
       break;
     case 2:
     case 13:
       drawLine({x:point2.x, y:point3.y + (point2.y - point3.y )/2},
                {x:point3.x - (point3.x - point4.x)/2, y:point3.y},
-               [1,1,1,1]);
+               [0,0,0,1]);
       break;
     case 3:
       drawLine({x:point1.x, y:point3.y + (point2.y - point3.y )/2},
                {x:point2.x, y:point3.y + (point2.y - point3.y )/2},
-               [1,1,1,1]);
+               [0,0,0,1]);
       break;
     case 4:
     case 11:
       drawLine({x:point2.x, y:point3.y + (point2.y - point3.y )/2},
                {x:point3.x - (point3.x - point4.x)/2, y:point1.y},
-               [1,1,1,1]);
+               [0,0,0,1]);
       break;
     case 5:
       drawLine({x:point3.x - (point3.x - point4.x)/2, y:point3.y},
                {x:point4.x, y:point4.y + (point1.y - point4.y )/2},
-               [1,1,1,1]);
+               [0,0,0,1]);
       drawLine({x:point2.x, y:point3.y + (point2.y - point3.y )/2},
               {x:point3.x - (point3.x - point4.x)/2, y:point1.y},
-              [1,1,1,1]);
+              [0,0,0,1]);
       break;
     case 6:
     case 9:
       drawLine({x:point3.x - (point3.x - point4.x)/2, y:point2.y},
                {x:point3.x - (point3.x - point4.x)/2, y:point3.y},
-               [1,1,1,1]);
+               [0,0,0,1]);
       break;
     case 7:
     case 8:
     drawLine({x:point3.x - (point3.x - point4.x)/2, y:point1.y},
              {x:point4.x, y:point4.y + (point1.y - point4.y )/2},
-             [1,1,1,1]);
+             [0,0,0,1]);
 
       break;
     case 10:
       drawLine({x:point3.x - (point3.x - point4.x)/2, y:point1.y},
                {x:point4.x, y:point4.y + (point1.y - point4.y )/2},
-               [1,1,1,1]);
+               [0,0,0,1]);
       drawLine({x:point2.x, y:point3.y + (point2.y - point3.y )/2},
                {x:point3.x - (point3.x - point4.x)/2, y:point3.y},
-               [1,1,1,1]);
+               [0,0,0,1]);
       break;
     case 12:
       drawLine({x:point1.x, y:point3.y + (point2.y - point3.y )/2},
                {x:point2.x, y:point3.y + (point2.y - point3.y )/2},
-               [1,1,1,1]);
+               [0,0,0,1]);
       break;
     default:
 

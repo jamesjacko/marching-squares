@@ -155,7 +155,7 @@ function solveWithAnimation(canvas, size, data, dist, border){
     $('#instructions ul li:nth-child(' + (dec + 1) + ')').css(
       {'font-weight': 'bold','color': 'red'});
 
-    var interval = 10;
+    var interval = 0;
      setTimeout(function () {
        if(x === size-2){
          x = 0;
