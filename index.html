@@ -31,29 +31,26 @@
     </script>
 
     <script src="data.js"></script>
+    <script src="controls.js"></script>
     <script src="animations.js"></script>
     <script src="script.js"></script>
     <script src="lookUp.js"></script>
 
   </head>
   <body onload="init()">
-    <div class="ui fixed inverted menu">
-      <div class="ui container">
-        <a href="#" class="header item">
-          Marching Squares
-        </a>
-      </div>
-    </div>
+
     <div class="ui main container">
       <h1 class="ui header">Marching Squares</h1>
-
+      <p>Marching squares is an algorithm which uses values within a two dimensional scalar field to generate contours. The contours generated can either follow a single data level known as isolines or filled areas between said isolines called isobands.</p><p>The two dimensional scalar field describes a grid of cells. The algorithm considers each cell independently which is assigned an index value based on the contour level(s) and the values at each corner of the cell. A predefined lookup table is then used to define the geometry of the cell in question and linear interpolation is used to calculate the position of the contour within the cell.</p><p>The following will describe the process of marching squares in a simplistic way.</p>
       <div class="positioner">
         <div id="step1">
           <strong>Marching Squares</strong><br>
           This interactive animation will walk you through the stages of the marching squares algorithm. To begin with we need some data.<br><br>Click anywhere on this text to get things going.
         </div>
         <div id="step2">
-          We have now generated a dataset of 1s and 0s. If you look closely, you will see that we have 1s in the middle with a jagged border of 0s. Click here and we will try and visualise this a bit better.
+          <strong>Threshold</strong><br>We will now apply a threshold to decide which values are considered inside and which are outside. Select a value at which to set the threshold for the data.
+          <i>1234</i>
+          <button id="thresh">Apply</button>
         </div>
         <div id="data_container">
 
@@ -88,8 +85,7 @@
         </ul>
         </div>
         <canvas id="mycanvas" width="800" height="500"></canvas>
-        <div id="slider"></div>
-        <div class="ui button" id="solve">Solve</div>
+        <button id="solve">Solve</button>
       </div>
     </div>
   </body>

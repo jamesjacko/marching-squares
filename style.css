@@ -1,8 +1,14 @@
 body{
+    background: url('footer_lodyas.png');
 }
 .main.container {
-    margin-top: 4em;
-    width:800px;
+    margin: 2em;
+    width:840px;
+    padding: 20px;
+    background: #FFF;
+    box-shadow: 1px 1px 5px #000;
+    border-top: 10px solid green;
+    border-bottom: 30px solid green;
 }
 canvas{
   border:1px solid #4696B2;
@@ -12,6 +18,7 @@ canvas{
 .positioner{
   position: relative;
 }
+
 #data_container, #instructions{
   font-family: "Courier New";
   color:#58BFE3;
@@ -49,6 +56,12 @@ canvas{
 }
 #step1 :hover{
   text-decoration: underline;
+}
+#step2 i{
+  margin-top: 70px;
+  display: block;
+  letter-spacing: 20px;
+  padding-left: 21px;
 }
 #instructions{
   left:auto;
@@ -118,4 +131,22 @@ canvas{
 }
 #slider, #solve{
   visibility: hidden;
+}
+button{
+  background: #58BFE3;
+  border:0;
+  color:#21252B;
+}
+button#thresh{
+  position:absolute;
+  bottom:-80px;
+  left:127px;
+}
+button#vis{
+  margin-top:20px;
+}
+button#solve{
+  position: absolute;
+  right: 15px;
+  top: 460px;
 }

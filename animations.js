@@ -1,6 +1,7 @@
 
 
 function showData(canvas, size, data, $dataContainer, dpr, callback){
+  $dataContainer.html("");
   var offset = Math.floor(((canvas.height) / size)/dpr);
   $dataContainer.css({'letter-spacing': (offset - 6.7) + "px"});
   var y = 29;
@@ -10,7 +11,7 @@ function showData(canvas, size, data, $dataContainer, dpr, callback){
     var interval = 0.1 * y;
      setTimeout(function () {
 
-       $dataContainer.append(data[y*30 + x]);
+       $dataContainer.append('<span class="num n'+data[y*30 + x]+'">' + data[y*30 + x] + '</span>');
        x++;
        if(x===30){
         $dataContainer.append("<br>");
@@ -154,7 +155,7 @@ function solveWithAnimation(canvas, size, data, dist, border){
     $('#instructions ul li:nth-child(' + (dec + 1) + ')').css(
       {'font-weight': 'bold','color': 'red'});
 
-    var interval = $('#slider').slider('value');
+    var interval = 10;
      setTimeout(function () {
        if(x === size-2){
          x = 0;

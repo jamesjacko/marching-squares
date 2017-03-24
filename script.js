@@ -52,17 +52,32 @@ function init(){
     animate();
     $("#step1").hide();
   });
-  $('#step2').on('click',function(){
-    animate();
-    $('#data_container').hide();
-  });
+  // $('#step2').on('click',function(){
+  //   animate();
+  //   $('#data_container').hide();
+  // });
   $('#instructions ul li').on('click',function(){
-    console.log("HERE");
     step = 5;
     animate();
   });
-}
 
+  $('#thresh').on('click', function(){
+    for (var i = 0; i < data.length; i++) {
+      data[i] = data[i] > thresh ? 1 : 0;
+    }
+    showData(canvas,30,data,$('#data_container'),devicePixelRatio,function(){
+      $('#step2').html("Now we have the binary data for our contour we need to look at each cube formed by the data. Click the button bellow to see the cubes. <br><button id='vis' onclick='vis();'>Continue</button>");
+      gl.clearColor(0.13, 0.15, 0.17, 1);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+    });
+  });
+
+}
+function vis(){
+  $('#data_container').hide();
+  step = steps.VISUALISE;
+  animate();
+}
 function drawLine(start, end, color){
     var vertices = new Float32Array([
       start.x, start.y, 0,
@@ -107,7 +122,7 @@ function drawPoint(point,size, on){
     point.x - width, point.y - width * aspect
   ]);
 
-  //vbuffer = gl.createBuffer();
+  vbuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, vbuffer);
   gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
 
@@ -146,17 +161,20 @@ function animate(){
 
 
   var border = 20;
-  if(step === 0){
-    step = 1;
-  } else if (step ===1){
-    showData(canvas,size,data,$('#data_container'),devicePixelRatio, function(){$('#step2').show();});
+  if(step === steps.DATA){
+    step = steps.SHOWDATA;
+  } else if (step === steps.SHOWDATA){
+    showData(canvas,size,data,$('#data_container'),devicePixelRatio, function(){$('#step2').show();
+      gl.clearColor(0.13, 0.15, 0.17, 1);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      thresholdSelector(-1, 610, 150, 30);
+    });
 
-    step = 3;
-  } else if(step===3) {
+    //step = steps.THRESHOLD;
+  } else if(step===steps.VISUALISE) {
     drawBits(canvas, size, data, dist, border);
     $('#step2').html('Now we have something that is starting to resemble an island, we now need to construct a countour around the edge of the island. This is where the marching cubes algorithm comes into play. Each cube on the grid can be represended by a number. This number is then used to look up the required edge. click on a few cubes to see how this works.<br>When you are finished click the "solve" button below');
     step = 4;
-    $('#slider').css('visibility', 'visible');
     $('#solve').css('visibility', 'visible').on('click',function(){
       solveWithAnimation(canvas,size,data,dist,border);
     });
@@ -167,13 +185,31 @@ function animate(){
 
   canvas.addEventListener('click', function(e){
 
-    if(step === 0){
-      step = 1;
-    } else if (step === 4) {
+    if(step === steps.DATA){
+      step = steps.SHOWDATA;
+
+    } if(step === steps.SHOWDATA){
+      curPoint = {x: e.offsetX*devicePixelRatio,
+        y: e.offsetY};
+      for (var i = 0; i < tsPoints.length; i++) {
+        if(curPoint.x + 10 * devicePixelRatio > tsPoints[i].x &&
+          curPoint.x + 10 * devicePixelRatio < tsPoints[i].x2 &&
+          curPoint.y - 10 * 2 * devicePixelRatio - 5 > tsPoints[i].y &&
+          curPoint.y - 10 * 2 * devicePixelRatio - 5 < tsPoints[i].y2){
+            gl.clearColor(0.13, 0.15, 0.17, 1);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            thresholdSelector(i, 610, 150, 30);
+
+
+          break;
+
+        }
+
+      }
+    } else if (step === steps.CLICK) {
       $('#step2').hide();
       var coords = getGLCoord(canvas,
         e.offsetX * devicePixelRatio, e.offsetY * devicePixelRatio);
-      console.log(e.offsetX);
 
       // compare to dataCoords here
       var elem = 0;
@@ -231,10 +267,128 @@ function animate(){
   canvas.addEventListener('mousemove', function(e){
     if(e.offsetX < 500){
       canvas.style.cursor = "pointer";
+      if(step === steps.CLICK){
+        $('#step2').hide();
+        var coords = getGLCoord(canvas,
+          e.offsetX * devicePixelRatio, e.offsetY * devicePixelRatio);
+
+        // compare to dataCoords here
+        var elem = 0;
+        for(var i = 0; i < dataCoords.length; i++){
+          if(coords.x < dataCoords[i].x){
+            if(-coords.y < dataCoords[i].y){
+              elem = i;
+              break;
+            }
+          }
+        }
+        drawBits(canvas, size, data, dist, border);
+        drawPoint({x: dataCoords[elem].x,
+          y: dataCoords[elem].y}, 5,
+          data[elem]==1? 2: 3);
+        drawPoint({x: dataCoords[elem-1].x,
+          y: dataCoords[elem-1].y}, 5,
+          data[elem-1]==1? 2: 3);
+        drawPoint({x: dataCoords[elem-size].x,
+          y: dataCoords[elem-size].y}, 5,
+          data[elem-size]==1? 2: 3);
+        drawPoint({x: dataCoords[elem-size-1].x,
+          y: dataCoords[elem-size-1].y}, 5,
+          data[elem-size-1]==1? 2: 3);
+
+        var point2 = dataCoords[elem];
+        var point1 = dataCoords[elem-1];
+        var point3 = dataCoords[elem-size];
+        var point4 = dataCoords[elem-size-1];
+
+
+
+
+        drawMainCube(canvas,[data[elem - 1], data[elem],
+          data[elem-size], data[elem-size-1]],
+          620, 430);
+        $('#instructions').show();
+        $('#select').text("Cube selected!");
+        var binary = data[elem - 1] + "" + data[elem] + "" +
+          data[elem-size] + "" + data[elem-size-1];
+        $('#selectedIndex .binary').text(binary);
+        $('#selectedIndex').show();
+        $('#indexLabels i').show();
+        var dec = parseInt(binary,2);
+        $('#selectedIndex .decimal').text("=" + dec);
+        $('#instructions ul li').css({'font-weight': 'normal', 'color':'inherit'});
+        $('#instructions ul li:nth-child(' + (dec + 1) + ')').css(
+          {'font-weight': 'bold','color': 'red'});
+        drawConnections(point1, point2, point3, point4, dec);
+      }
     }else{
-      canvas.style.cursor = "auto";
+      if(step === steps.SHOWDATA){
+        curPoint = {x: e.offsetX*devicePixelRatio,
+          y: e.offsetY};
+        if(devicePixelRatio == 1){
+          if(curPoint.y > 356 && curPoint.y < 368){
+            if(curPoint.x > 594 && curPoint.x < 606){
+              gl.clearColor(0.13, 0.15, 0.17, 1);
+              gl.clear(gl.COLOR_BUFFER_BIT);
+              thresh = 0;
+              thresholdSelector(thresh, 610, 150, 30);
+            }
+            if(curPoint.x > 624 && curPoint.x < 636){
+              gl.clearColor(0.13, 0.15, 0.17, 1);
+              gl.clear(gl.COLOR_BUFFER_BIT);
+              thresh = 1;
+              thresholdSelector(thresh, 610, 150, 30);
+            }
+
+            if(curPoint.x > 654 && curPoint.x < 666){
+              gl.clearColor(0.13, 0.15, 0.17, 1);
+              gl.clear(gl.COLOR_BUFFER_BIT);
+              thresh = 2;
+              thresholdSelector(thresh, 610, 150, 30);
+            }
+
+            if(curPoint.x > 684 && curPoint.x < 696){
+              gl.clearColor(0.13, 0.15, 0.17, 1);
+              gl.clear(gl.COLOR_BUFFER_BIT);
+              thresh = 3;
+              thresholdSelector(thresh, 610, 150, 30);
+            }
+
+            canvas.style.cursor = "pointer";
+            $('.num').css({"font-weight":"normal","color":"inherit"});
+            for (var n = thresh; n < tsPoints.length; n++) {
+              $('.n'+ (n + 1)).css({"font-weight":"bold","color":"#99FF99"});
+            }
+          }
+        }
+        for (var i = 0; i < tsPoints.length; i++) {
+          if(curPoint.x + 10 * devicePixelRatio > tsPoints[i].x &&
+            curPoint.x + 10 * devicePixelRatio < tsPoints[i].x2 &&
+            curPoint.y - 10 * 2 * devicePixelRatio - 5 > tsPoints[i].y &&
+            curPoint.y - 10 * 2 * devicePixelRatio - 5 < tsPoints[i].y2){
+            canvas.style.cursor = "pointer";
+            $('.num').css({"font-weight":"normal","color":"inherit"});
+            for (var n = i; n < tsPoints.length; n++) {
+              $('.n'+ (n + 1)).css({"font-weight":"bold","color":"#99FF99"});
+            }
+            gl.clearColor(0.13, 0.15, 0.17, 1);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            thresh = i;
+            thresholdSelector(i, 610, 150, 30);
+            break;
+
+          } else {
+            canvas.style.cursor = "auto";
+          }
+
+        }
+      } else {
+        canvas.style.cursor = "auto";
+      }
     }
   });
+
+
 }
 
 function drawMainCube(canvas, data, x, y){
@@ -286,4 +440,15 @@ function drawBits(canvas, size, data, dist, border){
   drawLine(start, end,	[0.17, 0.7, 0.90, 1]);
   if(step > 3)
     drawLookUpCubes(canvas);
+}
+
+function testing(){
+  var testData = Array.apply(null, Array(30*30)).map(function() {
+    return Math.floor(Math.random() * 9) + 1 ;
+  });
+
+
+
+  console.log(testData.sort());
+
 }
